@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joe T. Garcia's - Payment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/payment.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="{{ url_for('menu') }}">Menu</a>
+        <a href="#">Specials</a>
+        <a href="#">About Us</a>
+    </div>
+    <div id="particles-js"></div>
+    <div class="logo-container">
+        <img src="/static/joe_t_logo.png" alt="Joe T. Garcia's Logo" onerror="this.src='https://via.placeholder.com/350x124?text=Joe+T.+Garcia\'s+Logo'">
+    </div>
+    <div class="payment-container">
+        <div class="cart-section">
+            <h2>Your Items</h2>
+            <p>Check your items before proceeding to payment.</p>
+            {% for item in cart %}
+                <div class="cart-item" data-name="{{ item.name }}">
+                    <img src="/static/{{ item.name | lower | replace(' ', '_') }}.png" alt="{{ item.name }}" onerror="this.src='https://via.placeholder.com/80?text={{ item.name }}'">
+                    <div class="cart-item-details">
+                        <h3>{{ item.name }}</h3>
+                        <div class="quantity">
+                            <button onclick="updateQuantity('{{ item.name }}', -1)">-</button>
+                            <span class="quantity-value">{{ item.quantity }}</span>
+                            <button onclick="updateQuantity('{{ item.name }}', 1)">+</button>
+                        </div>
+                        <a href="#" onclick="editItem('{{ item.name }}')">Edit Order</a>
+                    </div>
+                    <div class="cart-item-price">${{ "%.2f" % (item.price * item.quantity) }}</div>
+                </div>
+            {% endfor %}
+            <div class="order-more">
+                <button onclick="orderMore()">Order More</button>
+            </div>
+        </div>
+        <div class="summary-section">
+            <h3>Order Summary</h3>
+            <div class="promo">
+                <input type="text" placeholder="Coupon">
+                <button>Apply</button>
+            </div>
+            <div class="totals">
+                <div><span>Total</span><span id="subtotal">${{ "%.2f" % subtotal }}</span></div>
+                <div><span>Tip</span><span id="tip-amount">${{ "%.2f" % tip }}</span></div>
+                <div class="tip-options">
+                    <div class="tip-option" data-tip="10" onclick="setTip(10)">10%</div>
+                    <div class="tip-option" data-tip="20" onclick="setTip(20)">20%</div>
+                    <div class="tip-option" data-tip="25" onclick="setTip(25)">25%</div>
+                    <div class="tip-option" data-tip="custom" onclick="setTip('custom')">Custom</div>
+                </div>
+                <div class="custom-tip" id="custom-tip">
+                    <input type="number" id="custom-tip-input" placeholder="Enter tip percentage" min="0" max="100" oninput="setCustomTip()">
+                </div>
+                <div><span>Total cost</span><span id="total-cost">${{ "%.2f" % total }}</span></div>
+            </div>
+            <div class="receipt-options">
+                <h4>Receipt</h4>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="receipt-method" value="email" onchange="toggleReceiptInput()">
+                        <span class="custom-checkbox"></span>
+                        Email
+                    </label>
+                    <label>
+                        <input type="radio" name="receipt-method" value="text" onchange="toggleReceiptInput()">
+                        <span class="custom-checkbox"></span>
+                        Text
+                    </label>
+                    <label>
+                        <input type="radio" name="receipt-method" value="none" onchange="toggleReceiptInput()">
+                        <span class="custom-checkbox"></span>
+                        No Receipt
+                    </label>
+                </div>
+                <div class="receipt-input" id="email-input">
+                    <input type="email" id="receipt-email" placeholder="Enter your email">
+                </div>
+                <div class="receipt-input" id="phone-input">
+                    <input type="text" id="receipt-phone" placeholder="Enter your phone number" maxlength="14" oninput="formatPhoneNumber(this)">
+                </div>
+            </div>
+            <button class="pay-button" onclick="validateAndPay()">Pay</button>
+            <div class="gift-card">Pay with giftcard</div>
+            <div class="payment-methods">
+                <h3>We accept:</h3>
+                <div class="payment-methods-list">
+                    <div class="payment-method">
+                        <img src="/static/visa_icon.png" alt="Visa" onerror="this.src='https://via.placeholder.com/40x24?text=Visa'">
+                    </div>
+                    <div class="payment-method">
+                        <img src="/static/mastercard_icon.png" alt="Mastercard" onerror="this.src='https://via.placeholder.com/40x24?text=MC'">
+                    </div>
+                    <div class="payment-method">
+                        <img src="/static/apple_pay_icon.png" alt="Apple Pay" onerror="this.src='https://via.placeholder.com/40x24?text=ApplePay'">
+                    </div>
+                    <div class="payment-method">
+                        <img src="/static/google_pay_icon.png" alt="Google Pay" onerror="this.src='https://via.placeholder.com/40x24?text=GooglePay'">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="support">
+        <button onclick="showCallForHelp()" title="Call for Help" aria-label="Call for Help">
+            <i class="fas fa-phone"></i>
+        </button>
+        <button onclick="showFAQ()" title="FAQ" aria-label="FAQ">
+            <i class="fas fa-question-circle"></i>
+        </button>
+        <button onclick="showFeedback()" title="Feedback" aria-label="Feedback">
+            <i class="fas fa-comment"></i>
+        </button>
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="call-for-help-popup">
+        <h3>Call for Help</h3>
+        <p>Need assistance? Help is on the way! Someone will assist you shortly.</p>
+        <button onclick="hideCallForHelp()">Close</button>
+    </div>
+    <div class="popup" id="faq-popup">
+        <h3>Frequently Asked Questions</h3>
+        <p><strong>How do I add a tip?</strong> Select a tip percentage or enter a custom amount above.</p>
+        <p><strong>Can I change my order?</strong> Yes, click "Edit order" next to the item.</p>
+        <p><strong>What payment methods are accepted?</strong> We accept Visa, Mastercard, Apple Pay, Google Pay, and gift cards.</p>
+        <button onclick="hideFAQ()">Close</button>
+    </div>
+    <div class="popup" id="feedback-popup">
+        <h3>Submit Feedback</h3>
+        <p>Enter your feedback!</p>
+        <textarea id="feedback-text" placeholder="Enter your feedback or complaint here..."></textarea>
+        <button onclick="submitFeedback()">Submit</button>
+        <button onclick="hideFeedback()">Cancel</button>
+    </div>
+    <div class="popup" id="thank-you-popup">
+        <h3>Thank You!</h3>
+        <p>Your feedback has been submitted successfully.</p>
+    </div>
+    <div class="popup" id="order-thank-you-popup">
+        <h3>Thank You!</h3>
+        <p>Your order has been placed successfully.</p>
+    </div>
+    <div class="popup" id="tap-screen">
+        <h3>Complete Your Payment</h3>
+        <p>Tap your phone on the reader to pay.</p>
+        <img src="/static/tap_icon.png" alt="Tap Icon" class="tap-icon" onerror="this.src='https://via.placeholder.com/200x100?text=Tap'">
+        <div class="pay-option" onclick="showCardDetails()">Pay with Card</div>
+        <button onclick="hideTapScreen()">Cancel</button>
+    </div>
+    <div class="popup" id="card-details-popup">
+        <h3>Enter Card Details</h3>
+        <form id="card-details-form" onsubmit="submitCardDetails(event)">
+            <label for="card-number">Card Number</label>
+            <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19" required oninput="formatCardNumber(this)">
+            <label for="card-name">Name on Card</label>
+            <input type="text" id="card-name" placeholder="John Doe" required oninput="restrictToLetters(this)">
+            <div class="card-details-row">
+                <div>
+                    <label for="card-expiry">Expiration Date (MM/YY)</label>
+                    <input type="text" id="card-expiry" placeholder="MM/YY" maxlength="5" required oninput="formatExpiry(this)">
+                </div>
+                <div>
+                    <label for="card-cvv">CVV</label>
+                    <input type="text" id="card-cvv" placeholder="123" maxlength="3" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                </div>
+            </div>
+            <div class="button-group">
+                <button type="submit">Pay</button>
+                <button type="button" onclick="hideCardDetails()">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <div class="popup" id="payment-processing-popup">
+        <h3>Processing Payment</h3>
+        <div class="loader" id="payment-loader"></div>
+        <p class="success-message" id="payment-success">Payment Successful!</p>
+        <p class="receipt-message" id="receipt-sent-message"></p>
+    </div>
+    <div class="popup" id="track-order-popup">
+        <h3>Order Confirmation</h3>
+        <p>Would you like to track your order?</p>
+        <div class="button-group">
+            <button onclick="trackOrder(true)">Yes</button>
+            <button onclick="trackOrder(false)">No</button>
+        </div>
+    </div>
+    <div class="popup" id="edit-order-popup">
+        <h3>Edit Order: <span id="edit-item-name"></span></h3>
+        <div class="edit-options">
+            <h4>Customize Ingredients</h4>
+            <label>
+                <input type="checkbox" id="no-vegetables" onchange="updateCustomizations()">
+                No Vegetables
+            </label>
+            <label>
+                <input type="checkbox" id="no-meat" onchange="updateCustomizations()">
+                No Meat
+            </label>
+            <label>
+                <input type="checkbox" id="extra-vegetables" onchange="updateCustomizations()">
+                Extra Vegetables
+            </label>
+            <label>
+                <input type="checkbox" id="extra-meat" onchange="updateCustomizations()">
+                Extra Meat (+$2.00)
+            </label>
+            <h4>Spice Level</h4>
+            <label>
+                <select id="spice-level" onchange="updateCustomizations()">
+                    <option value="mild">Mild</option>
+                    <option value="medium">Medium</option>
+                    <option value="hot">Hot</option>
+                    <option value="extra-hot">Extra Hot</option>
+                </select>
+            </label>
+        </div>
+        <div class="button-group">
+            <button onclick="saveCustomizations()">Save</button>
+            <button onclick="removeItem()">Remove Item</button>
+            <button onclick="hideEditOrder()">Cancel</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        window.cart = {{ cart | tojson | safe }};
+        window.subtotal = {{ subtotal | float }};
+        window.tip = {{ tip | float }};
+        window.total = {{ total | float }};
+    </script>
+    <script src="{{ url_for('static', filename='js/payment.js') }}"></script>
+</body>
+</html>

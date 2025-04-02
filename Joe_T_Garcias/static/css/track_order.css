@@ -1,0 +1,282 @@
+/* Reset default styles and set base font */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+
+/* Body styling with Joe T's teal green background */
+body { 
+    background: #184733;
+    min-height: 100vh; 
+    color: #e9e9d9;
+    padding: 20px; 
+    position: relative; 
+    overflow-x: hidden; 
+}
+
+/* Particle background layer */
+#particles-js {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+/* Navigation bar styling */
+.navbar {
+    background: #e9e9d9;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.navbar a {
+    color: #184733;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+.navbar a:hover {
+    color: #123a2a;
+}
+
+/* Logo container for branding */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    position: relative;
+    z-index: 1;
+}
+.logo-container img {
+    width: 350px;
+    height: 124px;
+    object-fit: contain;
+}
+
+/* Main tracking container */
+.tracking-container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: #e9e9d9;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+}
+.tracking-container h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #184733;
+    text-align: center;
+    margin-bottom: 30px;
+}
+.tracking-container p {
+    font-size: 1.1rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Progress tracker for order stages */
+.progress-tracker {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    margin: 40px 0;
+}
+/* Background line for the progress bar */
+.progress-tracker::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 115px;
+    width: 68%; /* Full width minus padding */
+    height: 4px;
+    background: #d3d3d3;
+    z-index: 1;
+    transform: translateY(-50%);
+    transition: width 1s ease-in-out;
+}
+/* Active progress bar showing completion */
+.progress-tracker .progress {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    height: 4px;
+    background: #184733;
+    z-index: 2;
+    transform: translateY(-50%);
+    transition: width 1s ease-in-out;
+}
+/* Individual step styling */
+.progress-tracker .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 33.33%; /* Adjusted for 3 steps (100% / 3) */
+    position: relative;
+    z-index: 3;
+}
+.progress-tracker .step .circle {
+    width: 30px;
+    height: 30px;
+    background: #d3d3d3;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    color: #fff;
+    margin-bottom: 10px;
+    opacity: 1;
+    transform: scale(1);
+    transition: background 0.3s ease;
+}
+.progress-tracker .step .label {
+    font-size: 0.9rem;
+    color: #333;
+    text-align: center;
+    white-space: nowrap;
+    opacity: 1;
+    transform: scale(1);
+    transition: color 0.3s ease;
+}
+/* Active step styling */
+.progress-tracker .step.active .circle {
+    background: #184733;
+    animation: pulseCircle 1.5s infinite;
+}
+.progress-tracker .step.active .label {
+    color: #184733;
+    font-weight: bold;
+}
+@keyframes pulseCircle {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+/* Completed step styling */
+.progress-tracker .step.completed .circle {
+    background: #184733;
+    animation: none;
+}
+.progress-tracker .step.completed .label {
+    color: #333;
+}
+
+/* Order details section */
+.order-details {
+    margin-top: 30px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+}
+.order-details h3 {
+    font-size: 1.5rem;
+    color: #184733;
+    margin-bottom: 15px;
+}
+.order-details p {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Support buttons for customer assistance */
+.support {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+.support button {
+    width: 40px;
+    height: 40px;
+    background: #e9e9d9;
+    color: #184733;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+.support button:hover {
+    background: #d3d3d3;
+    transform: scale(1.1);
+}
+
+/* Overlay for popup visibility */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+/* Popup styling for support features */
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #e9e9d9;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+}
+.popup h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #184733;
+}
+.popup p {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+.popup textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+    font-size: 1rem;
+    background: #fff;
+    color: #184733;
+    margin-bottom: 15px;
+    resize: vertical;
+}
+.popup button {
+    width: 100%;
+    margin-top: 10px;
+    background: #184733;
+    color: #e9e9d9;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.popup button:hover {
+    background: #123a2a;
+}

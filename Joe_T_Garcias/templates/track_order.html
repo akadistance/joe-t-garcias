@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joe T. Garcia's - Track Your Order</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/track_order.css') }}">
+    <!-- Add Font Awesome CDN for icons in support buttons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation bar for easy access to other pages -->
+    <div class="navbar">
+        <a href="{{ url_for('menu') }}">Menu</a>
+        <a href="#">Specials</a>
+        <a href="#">About Us</a>
+    </div>
+    <!-- Background particle effect for visual enhancement -->
+    <div id="particles-js"></div>
+    <!-- Restaurant logo for branding -->
+    <div class="logo-container">
+        <img src="/static/joe_t_logo.png" alt="Joe T. Garcia's Logo" onerror="this.src='https://via.placeholder.com/350x124?text=Joe+T.+Garcia\'s+Logo'">
+    </div>
+    <!-- Main container for tracking order progress -->
+    <div class="tracking-container">
+        <h2>Track Your Order</h2>
+        <p>Your order is being prepared! Follow the progress below.</p>
+        <!-- Progress tracker showing order stages -->
+        <div class="progress-tracker">
+            <!-- Progress bar indicating completion level -->
+            <div class="progress" id="progress-bar"></div>
+            <!-- Step 1: Initial order receipt -->
+            <div class="step" id="step-1">
+                <div class="circle">1</div>
+                <div class="label">Order Received</div>
+            </div>
+            <!-- Step 2: Order preparation in progress -->
+            <div class="step" id="step-2">
+                <div class="circle">2</div>
+                <div class="label">Preparing Your Order</div>
+            </div>
+            <!-- Step 3: Order ready for pickup/delivery -->
+            <div class="step" id="step-3">
+                <div class="circle">3</div>
+                <div class="label">Ready</div>
+            </div>
+        </div>
+        <!-- Display order specifics for customer reference -->
+        <div class="order-details">
+            <h3>Order Details</h3>
+            <p><strong>Order Number:</strong> #{{ order_number }}</p>
+            <p><strong>Table Number:</strong> {{ table_number }}</p>
+            <p><strong>Items:</strong> {{ items }}</p>
+            <p><strong>Total:</strong> ${{ "%.2f" % total }}</p>
+        </div>
+    </div>
+    <!-- Support buttons for customer assistance -->
+    <div class="support">
+        <button onclick="showCallForHelp()" title="Call for Help">
+            <i class="fas fa-phone"></i>
+        </button>
+        <button onclick="showFAQ()" title="FAQ">
+            <i class="fas fa-question-circle"></i>
+        </button>
+        <button onclick="showFeedback()" title="Feedback">
+            <i class="fas fa-comment"></i>
+        </button>
+    </div>
+    <!-- Overlay for dimming background when popups are active -->
+    <div class="overlay" id="overlay"></div>
+    <!-- Popup for requesting help -->
+    <div class="popup" id="call-for-help-popup">
+        <h3>Call for Help</h3>
+        <p>Need assistance? Help is on the way! Someone will assist you shortly.</p>
+        <button onclick="hideCallForHelp()">Close</button>
+    </div>
+    <!-- Popup for common questions -->
+    <div class="popup" id="faq-popup">
+        <h3>Frequently Asked Questions</h3>
+        <p><strong>How long will my order take?</strong> Most orders are delivered within 15-20 minutes.</p>
+        <p><strong>Can I change my order?</strong> Please call for help to modify your order.</p>
+        <p><strong>Who can I contact for issues?</strong> Use the "Call for Help" button to get assistance.</p>
+        <button onclick="hideFAQ()">Close</button>
+    </div>
+    <!-- Popup for submitting feedback -->
+    <div class="popup" id="feedback-popup">
+        <h3>Submit Feedback</h3>
+        <p>Enter your feedback!</p>
+        <textarea id="feedback-text" placeholder="Enter your feedback or complaint here..."></textarea>
+        <button onclick="submitFeedback()">Submit</button>
+        <button onclick="hideFeedback()">Cancel</button>
+    </div>
+    <!-- Popup for feedback submission confirmation -->
+    <div class="popup" id="thank-you-popup">
+        <h3>Thank You!</h3>
+        <p>Your feedback has been submitted successfully.</p>
+    </div>
+    <!-- External scripts for particle effects and tracking logic -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="{{ url_for('static', filename='js/track_order.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joe T. Garcia's - Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="{{ url_for('menu') }}" class="active">Menu</a>
+        <a href="#">Specials</a>
+        <a href="#">About Us</a>
+        <a href="{{ url_for('payment') }}" class="cart-link" id="your-items-link">
+            Your Items (<span id="cart-count">0</span>)
+        </a>
+    </div>
+    <div id="particles-js"></div>
+    <div class="logo-container">
+        <img src="/static/joe_t_logo.png" alt="Joe T. Garcia's Logo" onerror="this.src='https://via.placeholder.com/350x124?text=Joe+T.+Garcia\'s+Logo'">
+    </div>
+    <div class="menu-container">
+        <h2>Our Menu</h2>
+        {% for category, items in menu_items.items() %}
+            <div class="menu-category">
+                <h3>{{ category }}</h3>
+                <div class="menu-items">
+                    {% for item in items %}
+                        <div class="menu-item">
+                            <img src="/static/{{ item.image }}" alt="{{ item.name }}" onerror="this.src='https://via.placeholder.com/150?text={{ item.name }}'">
+                            <div class="menu-item-details">
+                                <h4>{{ item.name }}</h4>
+                                <p>{{ item.description }}</p>
+                                <p class="price">${{ "%.2f" % item.price }}</p>
+                                <button class="add-to-cart" data-item-name="{{ item.name }}">Add Item</button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="support">
+        <button onclick="showCallForHelp()" title="Call for Help" aria-label="Call for Help">
+            <i class="fas fa-phone"></i>
+        </button>
+        <button onclick="showFAQ()" title="FAQ" aria-label="FAQ">
+            <i class="fas fa-question-circle"></i>
+        </button>
+        <button onclick="showFeedback()" title="Feedback" aria-label="Feedback">
+            <i class="fas fa-comment"></i>
+        </button>
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="call-for-help-popup">
+        <h3>Call for Help</h3>
+        <p>Need assistance? Help is on the way! Someone will assist you shortly.</p>
+        <button onclick="hideCallForHelp()">Close</button>
+    </div>
+    <div class="popup" id="faq-popup">
+        <h3>Frequently Asked Questions</h3>
+        <p><strong>What are your hours?</strong> We are open from 11 AM to 10 PM daily.</p>
+        <p><strong>Do you offer vegetarian options?</strong> Yes, please ask your server for our vegetarian menu.</p>
+        <p><strong>Can I make a reservation?</strong> Yes, please call us to reserve a table.</p>
+        <button onclick="hideFAQ()">Close</button>
+    </div>
+    <div class="popup" id="feedback-popup">
+        <h3>Submit Feedback</h3>
+        <p>Enter your feedback!</p>
+        <textarea id="feedback-text" placeholder="Enter your feedback or complaint here..."></textarea>
+        <button onclick="submitFeedback()">Submit</button>
+        <button onclick="hideFeedback()">Cancel</button>
+    </div>
+    <div class="popup" id="thank-you-popup">
+        <h3>Thank You!</h3>
+        <p>Your feedback has been submitted successfully.</p>
+    </div>
+    <div class="popup" id="empty-cart-popup">
+        <h3>No Items</h3>
+        <p>You have no items yet!</p>
+        <button onclick="hideEmptyCartPopup()">Close</button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="{{ url_for('static', filename='js/menu.js') }}"></script>
+</body>
+</html>
