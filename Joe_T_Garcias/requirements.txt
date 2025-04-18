@@ -1,0 +1,15 @@
+- flask
+- flask session
+
+- Copy and paste the following in your terminal:
+
+    pip install flask flask-session
+
+
+- To run the app, do the following:
+
+> cd Joe_T_Garcias
+> python3 app.py
+
+- You will see a pop up on bottom right of your screen if you are still in Github codespaces
+- Click "Open in browser" and you will be redirected to the application
